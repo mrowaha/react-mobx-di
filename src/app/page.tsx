@@ -23,8 +23,22 @@ function Home() {
         ))
       }
       <button onClick={async () => {
-          await flowResult(todosService?.asyncFetch());
+          const value = await flowResult(todosService?.asyncFetch());
       }}>Fetch</button>
+
+      <button onClick={async () => {
+        const controller = new AbortController();
+        todosService?.asyncFetchWithAbort(controller);
+        await new Promise<void>(res => {
+          setTimeout(() => {
+            controller.abort("cancelled by user");
+            res();
+          }, 2500);
+        })
+      }}>
+        Fetch But Cancel
+      </button>
+
       {
         todosService?.loading && <h5>Loading....</h5>
       }

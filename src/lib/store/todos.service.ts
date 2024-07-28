@@ -45,6 +45,18 @@ export class TodosService {
     this.loading = false;
   }
 
+  @flow
+  *asyncFetchWithAbort(abortController : AbortController) {
+    this.loading = true;
+    try {
+      this.todos = yield this.todosApi.fetchTodos(abortController);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   static $inject = ['todosApi']
 }
 
